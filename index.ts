@@ -1,8 +1,6 @@
-import dotenv from "dotenv";
+require('dotenv').config()
 
 import Server from "./server";
-
-dotenv.config();
 
 const App = new Server();
 
