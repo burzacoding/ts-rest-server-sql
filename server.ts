@@ -1,6 +1,8 @@
 import express, { Application } from "express";
 import cors from "cors";
 import routerUsuarios from "./routes/usuarios"
+import routerMarcas from "./routes/marcas"
+import routerModelos from "./routes/modelos"
 import db from "./database/config";
 
 class Server {
@@ -24,6 +26,8 @@ class Server {
   }
 
   routes () {
+    this.app.use('/marcas',   routerMarcas)
+    this.app.use('/modelos',  routerModelos)
     this.app.use('/usuarios', routerUsuarios)
   }
 
@@ -32,7 +36,7 @@ class Server {
       console.log("Conectando a base de datos...");
       await db.authenticate();
       console.log("Base de datos conectada");
-      
+      // await db.sync({ force: true });
 
     } catch (err) {
       throw new Error(err.message);

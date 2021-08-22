@@ -32,7 +32,7 @@ const Usuario = db.define(
 // })();
 
 Usuario.prototype.toJSON = function () {
-  const { id, ...rest } = this.get();
+  const { id, createdAt, updatedAt, estado, ...rest } = this.get();
   return { ...rest };
 };
 

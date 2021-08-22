@@ -16,6 +16,7 @@ export const getUsuarios = async (req: Request, res: Response) => {
 export const getUsuario = async (req: Request, res: Response) => {
   const { id } = req.params;
   const usuario = await Usuario.findByPk(id);
+  //@ts-ignore
   if (usuario && usuario.estado) {
     res.json({
       message: "getUsuario",
@@ -68,6 +69,7 @@ export const deleteUsuario = async (req: Request, res: Response) => {
       estado: 0
     })
     res.status(202).json({
+      //@ts-ignore
       message: "Usuario " + usuario.nombre + " ha sido eliminado.",
     })
   } catch (error) {
@@ -81,8 +83,7 @@ export const deleteUsuario = async (req: Request, res: Response) => {
 export const createUsuario = async (req: Request, res: Response) => {
   const body = req.body;
   try {
-    const usuario = Usuario.build(body);
-    await usuario.save();
+    const usuario = await Usuario.create(body);
     res.status(201).json({
       message: "Usuario creado",
       results: usuario,
