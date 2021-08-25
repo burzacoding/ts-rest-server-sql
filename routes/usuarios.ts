@@ -1,16 +1,29 @@
 import { Router } from "express";
-import { createUsuario, deleteUsuario, getUsuario, getUsuarios, updateUsuario } from "../controllers/usuarios";
+import {
+  createUsuario,
+  deleteUsuario,
+  getUsuario,
+  getUsuarios,
+  updateUsuario,
+  loginUsuario,
+} from "../controllers/usuarios";
+import {
+  emailAndPasswordMiddleware,
+  nameEmailAndPasswordMiddleware,
+} from "../middlewares/validateEmailAndPassword";
 
 const router = Router();
 
 router.get("/", getUsuarios);
 
-router.post("/", createUsuario);
+router.post("/", nameEmailAndPasswordMiddleware, createUsuario);
 
-router.get("/:id", getUsuario)
+router.post("/login", emailAndPasswordMiddleware, loginUsuario);
 
-router.put("/:id", updateUsuario)
+router.get("/:id", getUsuario);
 
-router.delete("/:id", deleteUsuario)
+router.put("/:id", updateUsuario);
+
+router.delete("/:id", deleteUsuario);
 
 export default router;

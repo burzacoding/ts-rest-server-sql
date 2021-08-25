@@ -1,5 +1,12 @@
+import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
-import Usuario from "../models/usuario";
+import { Salt } from "../config/bcrypt";
+import Usuario, { UserAttributes } from "../models/usuario";
+
+interface UserLogin {
+  email: string;
+  password: string;
+}
 
 export const getUsuarios = async (req: Request, res: Response) => {
   const page = Math.abs(Number(req.query.page)) || 1;
@@ -85,14 +92,11 @@ export const deleteUsuario = async (req: Request, res: Response) => {
 };
 
 export const createUsuario = async (req: Request, res: Response) => {
-  const body = req.body;
+  const user = res.locals.user;
   try {
     const [usuario, creado] = await Usuario.findOrCreate({
-      where: { email: body.email },
-      defaults: {
-        email: body.email,
-        nombre: body.nombre,
-      },
+      where: { email: user.email },
+      defaults: user
     });
 
     if (!creado) {
@@ -111,3 +115,26 @@ export const createUsuario = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const loginUsuario = async (req: Request, res:Response) => {
+  const { email, password } = res.locals.user as UserLogin
+  const usuario = await Usuario.findOne({ where: { email: email.toUpperCase()}})
+  //@ts-ignore
+  if (!usuario || !usuario.estado) {
+    return res.status(404).json({
+      message: `Usuario con email (${email}) no se encuentra`
+    })
+  }
+  //@ts-ignore
+  const isValid = bcrypt.compareSync(password, usuario.password)
+  if (!isValid) {
+    return res.status(403).json({
+      message: "Contraseña incorrecta.",
+      code: "password/not-valid"
+    })
+  }
+  res.status(200).json({
+  //@ts-ignore
+    message: `Usuario Validado, bienvenido ${usuario.nombre}`
+  })
+}
