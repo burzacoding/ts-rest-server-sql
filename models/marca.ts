@@ -1,9 +1,18 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import db from "../database/config";
-import { capitalize } from "lodash"
+import { capitalize } from "lodash";
 
-const Marca = db.define(
-  "Marca",
+class Marca extends Model {
+  toJSON() {
+    const { nombre, id } = this.get();
+    return {
+      nombre: capitalize(nombre),
+      id,
+    };
+  }
+}
+
+Marca.init(
   {
     nombre: {
       type: DataTypes.STRING,
@@ -12,20 +21,14 @@ const Marca = db.define(
     },
     estado: {
       type: DataTypes.BOOLEAN,
-      defaultValue: 1
-    }
+      defaultValue: 1,
+    },
   },
   {
+    sequelize: db,
     tableName: "marcas",
+    modelName: "Marca",
   }
 );
-
-Marca.prototype.toJSON = function() {
-  const { nombre, id } = this.get()
-  return {
-    nombre: capitalize(nombre),
-    id
-  }
-}
 
 export default Marca;

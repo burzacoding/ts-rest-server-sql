@@ -6,19 +6,27 @@ import {
   getUsuarios,
   updateUsuario,
   loginUsuario,
+  userMiddlewareTest,
 } from "../controllers/usuarios";
-import {
-  emailAndPasswordMiddleware,
-  nameEmailAndPasswordMiddleware,
-} from "../middlewares/validateEmailAndPassword";
+import { validateFields } from "../middlewares/testMiddleware";
 
 const router = Router();
 
 router.get("/", getUsuarios);
 
-router.post("/", nameEmailAndPasswordMiddleware, createUsuario);
+router.post(
+  "/",
+  validateFields(["password", "email", "nombre"]),
+  createUsuario
+);
 
-router.post("/login", emailAndPasswordMiddleware, loginUsuario);
+router.post("/login", validateFields(["email", "password"]), loginUsuario);
+
+router.get("/nameTest", validateFields(["nombre"]), userMiddlewareTest);
+
+router.get("/emailTest", validateFields(["email"]), userMiddlewareTest);
+
+router.get("/passwordTest", validateFields(["password"]), userMiddlewareTest);
 
 router.get("/:id", getUsuario);
 

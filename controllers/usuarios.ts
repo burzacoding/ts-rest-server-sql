@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import { Salt } from "../config/bcrypt";
+import { destruct } from "../middlewares/testMiddleware";
 import Usuario, { UserAttributes } from "../models/usuario";
 
 interface UserLogin {
@@ -92,11 +93,17 @@ export const deleteUsuario = async (req: Request, res: Response) => {
 };
 
 export const createUsuario = async (req: Request, res: Response) => {
-  const user = res.locals.user;
+  const { body } = req;
+  const user = destruct(body, "email", "password", "nombre")
+  const extendedUser = {
+    ...user,
+    emailUserEntered: user.email,
+    email: user.email?.toUpperCase(),
+  }
   try {
     const [usuario, creado] = await Usuario.findOrCreate({
-      where: { email: user.email },
-      defaults: user
+      where: { email: extendedUser.email },
+      defaults: extendedUser,
     });
 
     if (!creado) {
@@ -116,25 +123,42 @@ export const createUsuario = async (req: Request, res: Response) => {
   }
 };
 
-export const loginUsuario = async (req: Request, res:Response) => {
-  const { email, password } = res.locals.user as UserLogin
-  const usuario = await Usuario.findOne({ where: { email: email.toUpperCase()}})
+export const loginUsuario = async (req: Request, res: Response) => {
+  const { email, password } = res.locals.user as UserLogin;
+  const usuario = await Usuario.findOne({
+    where: { email: email.toUpperCase() },
+  });
   //@ts-ignore
   if (!usuario || !usuario.estado) {
     return res.status(404).json({
-      message: `Usuario con email (${email}) no se encuentra`
-    })
+      message: `Usuario con email (${email}) no se encuentra`,
+    });
   }
   //@ts-ignore
-  const isValid = bcrypt.compareSync(password, usuario.password)
+  const isValid = bcrypt.compareSync(password, usuario.password);
   if (!isValid) {
     return res.status(403).json({
       message: "Contraseña incorrecta.",
-      code: "password/not-valid"
-    })
+      code: "password/not-valid",
+    });
   }
   res.status(200).json({
-  //@ts-ignore
-    message: `Usuario Validado, bienvenido ${usuario.nombre}`
-  })
-}
+    //@ts-ignore
+    message: `Usuario Validado, bienvenido ${usuario.nombre}`,
+  });
+};
+
+export const userMiddlewareTest = async (req: Request, res: Response) => {
+  if (res.locals.errors) {
+    const errorCodes: any[] = [];
+    for (let error in res.locals.errors) {
+      errorCodes.push(res.locals.errors[error].message);
+    }
+    return res.status(400).json({
+      errors: errorCodes,
+    });
+  }
+  res.json({
+    message: "Todo OK",
+  });
+};

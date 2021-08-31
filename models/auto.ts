@@ -1,37 +1,43 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import db from "../database/config";
 import Marcas from "./marca";
 import Modelo from "./modelo";
 import Usuario from "./usuario";
 
-const Autos = db.define("Auto", {
+class Auto extends Model {}
+
+Auto.init({
   marca_id: {
     type: DataTypes.INTEGER,
     references: {
       model: Marcas,
       key: "id",
     },
-    allowNull: false
+    allowNull: false,
   },
   modelo_id: {
     type: DataTypes.INTEGER,
     references: {
       model: Modelo,
-      key: 'id'
-    }
+      key: "id",
+    },
   },
   estado: {
     type: DataTypes.BOOLEAN,
-    defaultValue: true
+    defaultValue: true,
   },
   propietario_id: {
     type: DataTypes.INTEGER,
     references: {
       model: Usuario,
-      key: 'id'
+      key: "id",
     },
-    allowNull: false
-  }
+    allowNull: false,
+  },
+}, {
+  sequelize: db,
+  modelName: "Auto",
+  tableName: 'autos'
 });
 
-export default Autos;
+export default Auto;

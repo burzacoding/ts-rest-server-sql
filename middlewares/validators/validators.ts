@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 
+import { RequiredStringSchema } from "yup/lib/string";
 import { errorCodes } from "../../config/errors";
 
 export const nombreValidator = Yup.string()
@@ -20,3 +21,6 @@ export const passwordValidator = Yup.string()
   .min(6, errorCodes.password.min.code)
   .max(18, errorCodes.password.max.code)
   .required(errorCodes.password.required.code);
+
+
+export type MyRequiredStringSchema = RequiredStringSchema<string | undefined, Record<string, any>>
