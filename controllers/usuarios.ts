@@ -124,7 +124,7 @@ export const createUsuario = async (req: Request, res: Response) => {
 };
 
 export const loginUsuario = async (req: Request, res: Response) => {
-  const { email, password } = res.locals.user as UserLogin;
+  const { email, password } = req.body as UserLogin;
   const usuario = await Usuario.findOne({
     where: { email: email.toUpperCase() },
   });

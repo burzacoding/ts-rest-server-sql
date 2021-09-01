@@ -1,9 +1,30 @@
 import express, { Application } from "express";
 import cors from "cors";
-import routerUsuarios from "./routes/usuarios"
-import routerMarcas from "./routes/marcas"
-import routerModelos from "./routes/modelos"
+import routerUsuarios from "./routes/usuarios";
+import routerMarcas from "./routes/marcas";
+import routerModelos from "./routes/modelos";
+import routerAutos from "./routes/autos";
 import db from "./database/config";
+import Usuario from "./models/usuario";
+import Marca from "./models/marca";
+
+const data = [
+  {
+    nombre: "Cesar Pintos",
+    email: "PINTOS@GMAIL.COM",
+    password: "123456",
+    emailUserEntered: "pintos@gmail.com",
+  },
+  {
+    nombre: "Lucas Cardozo",
+    email: "CARDOZO@GMAIL.COM",
+    emailUserEntered: "cardozo@gmail.com",
+    password: "654321",
+  },
+  { nombre: "VOLKSWAGEN" },
+  { nombre: "RENAULT" },
+  { nombre: "FORD" },
+];
 
 class Server {
   private app: Application;
@@ -11,12 +32,12 @@ class Server {
 
   constructor() {
     this.app = express();
-    this.port = process.env.PORT || 3030
+    this.port = process.env.PORT || 3030;
 
     //Inicialización de funciones
-    this.middlewares()
-    this.database()
-    this.routes()
+    this.middlewares();
+    this.database();
+    this.routes();
   }
 
   middlewares() {
@@ -25,10 +46,11 @@ class Server {
     this.app.use(express.static("public"));
   }
 
-  routes () {
-    this.app.use('/marcas',   routerMarcas)
-    this.app.use('/modelos',  routerModelos)
-    this.app.use('/usuarios', routerUsuarios)
+  routes() {
+    this.app.use("/marcas", routerMarcas);
+    this.app.use("/modelos", routerModelos);
+    this.app.use("/usuarios", routerUsuarios);
+    this.app.use("/autos", routerAutos);
   }
 
   async database() {
@@ -37,16 +59,22 @@ class Server {
       await db.authenticate();
       console.log("Base de datos conectada");
       await db.sync({ force: true });
-
+      await Promise.all([
+        Usuario.create(data[0]),
+        Usuario.create(data[1]),
+        Marca.create(data[2]),
+        Marca.create(data[3]),
+        Marca.create(data[4]),
+      ]);
     } catch (err) {
       throw new Error(err.message);
     }
   }
 
-  listen () {
+  listen() {
     this.app.listen(this.port, () => {
       console.log("Escuchando en el puerto: " + this.port);
-    })
+    });
   }
 }
 
