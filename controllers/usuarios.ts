@@ -20,7 +20,6 @@ export const getUsuarios = async (req: Request, res: Response) => {
     limit: limit,
   });
   res.json({
-    message: "getUsuarios",
     results: usuarios,
     count,
   });
@@ -31,7 +30,6 @@ export const getUsuario = async (req: Request, res: Response) => {
   const usuario = await Usuario.findOne({ where: { id, estado: true } });
   if (usuario) {
     res.json({
-      message: "getUsuario",
       results: usuario,
     });
   } else {

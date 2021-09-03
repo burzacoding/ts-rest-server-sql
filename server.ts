@@ -56,14 +56,14 @@ class Server {
       console.log("Conectando a base de datos...");
       await db.authenticate();
       console.log("Base de datos conectada");
-      await db.sync({ force: true });
-      await Promise.all([
-        Usuario.create(data[0]),
-        Usuario.create(data[1]),
-        Marca.create(data[2]),
-        Marca.create(data[3]),
-        Marca.create(data[4]),
-      ]);
+      // await db.sync({ force: true });
+      // await Promise.all([
+      //   Usuario.create(data[0]),
+      //   Usuario.create(data[1]),
+      //   Marca.create(data[2]),
+      //   Marca.create(data[3]),
+      //   Marca.create(data[4]),
+      // ]);
     } catch (err) {
       throw new Error(err as any);
     }
