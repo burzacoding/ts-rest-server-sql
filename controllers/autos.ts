@@ -1,8 +1,5 @@
 import { Request, Response } from "express";
-import Auto from "../models/auto";
-import Marca from "../models/marca";
-import Modelo from "../models/modelo";
-import Usuario from "../models/usuario";
+import { Auto, Marca, Modelo, Usuario } from "../models";
 
 export const getAutos = async (req: Request, res: Response) => {
   try {

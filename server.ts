@@ -67,7 +67,7 @@ class Server {
         Marca.create(data[4]),
       ]);
     } catch (err) {
-      throw new Error(err.message);
+      throw new Error(err as any);
     }
   }
 

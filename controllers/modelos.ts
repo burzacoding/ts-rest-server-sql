@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { capitalize } from "lodash";
-import Marca from "../models/marca";
-import Modelo from "../models/modelo";
+import { Marca, Modelo } from "../models";
 
 export const getModelos = async (req: Request, res: Response) => {
   try {
@@ -44,28 +43,43 @@ export const getModelo = async (req: Request, res: Response) => {
 // }
 
 export const postModelo = async (req: Request, res: Response) => {
-  const nombre: string = req.body.nombre
-  const marca: string = req.body.marca
-  const NOMBRE = nombre.toUpperCase()
-  const MARCA = marca.toUpperCase()
+  const nombre: string = req.body.nombre;
+  const marca: string = req.body.marca;
+  const NOMBRE = nombre.toUpperCase();
+  const MARCA = marca.toUpperCase();
   try {
     // Busca si ya existe un dato con ese nombre
-    const modeloExistePromise = Modelo.findOne({ where: { nombre: NOMBRE }})
-    const marcaPromise = Marca.findOne({ where: { nombre: MARCA }})
+    const modeloExistePromise = Modelo.findOne({ where: { nombre: NOMBRE } });
+    const marcaPromise = Marca.findOne({ where: { nombre: MARCA } });
 
-    const [modelAlreadyExists, marcaData] = await Promise.all([modeloExistePromise, marcaPromise])
+    const [modelAlreadyExists, marcaData] = await Promise.all([
+      modeloExistePromise,
+      marcaPromise,
+    ]);
 
     if (modelAlreadyExists) {
-      return res.status(404).json({ message: `El modelo ${capitalize(nombre)} ya existe.`})
+      return res
+        .status(404)
+        .json({ message: `El modelo ${capitalize(nombre)} ya existe.` });
     }
 
     if (!marcaData) {
-      return res.status(404).json({ message: `La marca ${capitalize(marca)} no existe en la base de datos.`})
+      return res
+        .status(404)
+        .json({
+          message: `La marca ${capitalize(
+            marca
+          )} no existe en la base de datos.`,
+        });
     }
 
     // Crea el modelo nuevo con nombre en uppercase
     //@ts-ignore
-    const modeloNuevo = await Modelo.create({ nombre: NOMBRE, marca_id: marcaData.id });
+    const modeloNuevo = await Modelo.create({
+      nombre: NOMBRE,
+      //@ts-ignore
+      marca_id: marcaData.id,
+    });
     res.status(201).json({
       message: "Modelo " + nombre + " creado",
       results: modeloNuevo,

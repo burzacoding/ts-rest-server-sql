@@ -1,8 +1,7 @@
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
-import { Salt } from "../config/bcrypt";
 import { destruct } from "../middlewares/testMiddleware";
-import Usuario, { UserAttributes } from "../models/usuario";
+import { Usuario } from "../models";
 
 interface UserLogin {
   email: string;
@@ -94,12 +93,12 @@ export const deleteUsuario = async (req: Request, res: Response) => {
 
 export const createUsuario = async (req: Request, res: Response) => {
   const { body } = req;
-  const user = destruct(body, "email", "password", "nombre")
+  const user = destruct(body, "email", "password", "nombre");
   const extendedUser = {
     ...user,
     emailUserEntered: user.email,
     email: user.email?.toUpperCase(),
-  }
+  };
   try {
     const [usuario, creado] = await Usuario.findOrCreate({
       where: { email: extendedUser.email },

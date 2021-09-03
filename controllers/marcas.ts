@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { capitalize } from "lodash";
-import Marca from "../models/marca";
+import { Marca } from "../models";
 
 export const getMarcas = async (req: Request, res: Response) => {
   try {
@@ -38,14 +38,16 @@ export const getMarca = async (req: Request, res: Response) => {
 };
 
 export const postMarca = async (req: Request, res: Response) => {
-  const nombre: string = req.body.nombre
-  const NOMBRE = nombre.toUpperCase()
+  const nombre: string = req.body.nombre;
+  const NOMBRE = nombre.toUpperCase();
   try {
     // Busca si ya existe un dato con ese nombre
-    const alreadyExists = await Marca.findOne({ where: { nombre: NOMBRE }})
+    const alreadyExists = await Marca.findOne({ where: { nombre: NOMBRE } });
 
     if (alreadyExists) {
-      return res.status(404).json({ message: `La marca ${capitalize(nombre)} ya existe.`})
+      return res
+        .status(404)
+        .json({ message: `La marca ${capitalize(nombre)} ya existe.` });
     }
 
     // Crea la marca nueva con nombre en uppercase

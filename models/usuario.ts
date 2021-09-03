@@ -1,24 +1,39 @@
 import bcrypt from "bcryptjs";
-import { DataTypes, ModelAttributes, Optional } from "sequelize";
+import { DataTypes, Model } from "sequelize";
 
 import db from "../database/config";
 import { Salt } from "../config/bcrypt";
 
 export interface UserAttributes {
-  id: number,
-  uuid: string,
-  nombre: string,
-  email: string,
-  emailUserEntered: string,
-  password: string,
-  estado: boolean,
+  id: number;
+  uuid: string;
+  nombre: string;
+  email: string;
+  emailUserEntered: string;
+  password: string;
+  estado: boolean;
 }
 
 // interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
 
 // const Usuario = db.define<UserAttributes, UserCreationAttributes>(
-const Usuario = db.define(
-  "Usuario",
+
+class Usuario extends Model {
+  toJSON() {
+    const {
+      id,
+      createdAt,
+      updatedAt,
+      estado,
+      emailUserEntered,
+      password,
+      ...rest
+    } = this.get();
+    return { ...rest };
+  }
+}
+
+Usuario.init(
   {
     uuid: {
       type: DataTypes.UUID,
@@ -32,13 +47,13 @@ const Usuario = db.define(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-      get () {
-        return this.getDataValue('emailUserEntered');
-      }
+      get() {
+        return this.getDataValue("emailUserEntered");
+      },
     },
     emailUserEntered: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     password: {
       type: DataTypes.STRING,
@@ -55,16 +70,9 @@ const Usuario = db.define(
   },
   {
     tableName: "usuarios",
+    sequelize: db,
+    modelName: "Usuario",
   }
 );
-
-// (async function () {
-//   await Usuario.sync({ alter: true });
-// })();
-
-Usuario.prototype.toJSON = function () {
-  const { id, createdAt, updatedAt, estado, emailUserEntered, password, ...rest } = this.get();
-  return { ...rest };
-};
 
 export default Usuario;

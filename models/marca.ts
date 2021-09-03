@@ -21,7 +21,7 @@ Marca.init(
     },
     estado: {
       type: DataTypes.BOOLEAN,
-      defaultValue: 1,
+      defaultValue: true,
     },
   },
   {

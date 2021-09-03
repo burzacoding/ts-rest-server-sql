@@ -16,13 +16,6 @@ Modelo.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    marca_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: Marca,
-        key: "id",
-      },
-    },
     estado: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
