@@ -50,6 +50,10 @@ Usuario.init(
       get() {
         return this.getDataValue("emailUserEntered");
       },
+      set(email: string) {
+        this.setDataValue("emailUserEntered", email);
+        this.setDataValue("email", email.toUpperCase());
+      },
     },
     emailUserEntered: {
       type: DataTypes.STRING,

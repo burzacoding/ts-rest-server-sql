@@ -11,14 +11,12 @@ import Marca from "./models/marca";
 const data = [
   {
     nombre: "Cesar Pintos",
-    email: "PINTOS@GMAIL.COM",
+    email: "Pintos@gmail.com",
     password: "123456",
-    emailUserEntered: "pintos@gmail.com",
   },
   {
     nombre: "Lucas Cardozo",
-    email: "CARDOZO@GMAIL.COM",
-    emailUserEntered: "cardozo@gmail.com",
+    email: "cArdoZo@gmail.com",
     password: "654321",
   },
   { nombre: "VOLKSWAGEN" },
