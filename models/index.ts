@@ -33,5 +33,11 @@ Usuario.hasMany(Auto, {
     allowNull: false,
   },
 });
+Auto.belongsTo(Usuario, {
+  foreignKey: {
+    name: "propietarioId",
+    allowNull: false,
+  },
+});
 
 export { Auto, Usuario, Modelo, Marca };

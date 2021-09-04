@@ -1,12 +1,11 @@
 import { capitalize } from "lodash";
 import { DataTypes, Model } from "sequelize";
 import db from "../database/config";
-import Marca from "./marca";
 
 class Modelo extends Model {
   toJSON() {
-    const { nombre, marca_id } = this.get();
-    return { nombre: capitalize(nombre), marca_id };
+    const { nombre, createdAt, updatedAt, estado, ...rest } = this.get();
+    return { nombre: capitalize(nombre), ...rest };
   }
 }
 
@@ -15,6 +14,7 @@ Modelo.init(
     nombre: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     estado: {
       type: DataTypes.BOOLEAN,

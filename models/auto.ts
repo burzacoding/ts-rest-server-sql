@@ -1,7 +1,12 @@
 import { DataTypes, Model } from "sequelize";
 import db from "../database/config";
 
-class Auto extends Model {}
+class Auto extends Model {
+  toJSON() {
+    const { estado, createdAt, updatedAt, ...rest } = this.get();
+    return { ...rest };
+  }
+}
 
 Auto.init(
   {

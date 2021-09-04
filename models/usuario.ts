@@ -25,7 +25,6 @@ class Usuario extends Model {
       createdAt,
       updatedAt,
       estado,
-      emailUserEntered,
       password,
       ...rest
     } = this.get();
@@ -48,7 +47,7 @@ Usuario.init(
       allowNull: false,
       unique: true,
       get() {
-        return this.getDataValue("emailUserEntered");
+        return this.getDataValue('email');
       },
       set(email: string) {
         this.setDataValue("emailUserEntered", email);

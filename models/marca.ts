@@ -3,11 +3,12 @@ import db from "../database/config";
 import { capitalize } from "lodash";
 
 class Marca extends Model {
+  id: any;
   toJSON() {
-    const { nombre, id } = this.get();
+    const { nombre, createdAt, updatedAt, estado, ...rest } = this.get();
     return {
       nombre: capitalize(nombre),
-      id,
+      ...rest,
     };
   }
 }
@@ -30,5 +31,9 @@ Marca.init(
     modelName: "Marca",
   }
 );
+
+// (async () => {
+//   await Marca.sync({alter: true})
+// })()
 
 export default Marca;
