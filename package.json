@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prod": "node dist env=prod",
+    "dev" : "node dist env=dev",
+    "watchprod": "nodemon dist env=prod",
+    "watchdev": "nodemon dist env=dev"
   },
   "keywords": [],
   "author": "",
