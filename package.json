@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "prod": "node dist env=prod",
-    "dev" : "node dist env=dev",
+    "dev" : "node dist",
     "watchprod": "nodemon dist env=prod",
-    "watchdev": "nodemon dist env=dev"
+    "watchdev": "nodemon dist",
+    "start_sv_prod" : "node dist env=prod mode=force"
   },
   "keywords": [],
   "author": "",
